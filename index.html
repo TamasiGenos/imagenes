@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Imágenes</title>
+    <style>
+        /* Estilo para que las imágenes se adapten a la pantalla si es necesario */
+        #gallery img {
+            max-width: 100%; /* La imagen no será más ancha que el contenedor o la pantalla */
+            height: auto; /* Mantiene la proporción de la imagen */
+            display: block;
+            margin: 10px auto; /* Centra la imagen en su contenedor */
+        }
+    </style>
+</head>
+<body>
+
+<div id="gallery"></div>
+
+<script>
+    // Número de imágenes
+    const totalImages = 1502;
+    
+    // Contenedor de la galería
+    const gallery = document.getElementById("gallery");
+
+    for (let i = 1; i <= totalImages; i++) {
+        // Crea un enlace
+        const link = document.createElement("a");
+        link.href = `images/@OnlyShareOfficial TELEGRAM (${i}).jpg`; // Cambia esta ruta según la ubicación de tus imágenes
+        link.target = "_blank"; // Abre en una nueva pestaña (opcional)
+
+        // Crea una imagen
+        const img = document.createElement("img");
+        img.src = `images/@OnlyShareOfficial TELEGRAM (${i}).jpg`; // Ruta para las miniaturas
+        img.alt = `Imagen ${i}`;
+
+        // Añade la imagen dentro del enlace
+        link.appendChild(img);
+
+        // Añade el enlace dentro del contenedor de galería
+        gallery.appendChild(link);
+    }
+</script>
+
+</body>
+</html>
