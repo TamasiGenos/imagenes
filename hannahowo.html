@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/ba4ab86251.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="css/css.css">
+  <link rel="stylesheet" href="css/cssnavbar.css">
+  <title>Gallery</title>
+</head>
+<body>
+  <div class="container-fluid px-0">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-light bg-white fixed-top">
+      <div class="navbar-brand d-flex align-items-center">
+        <img src="logo.png" alt="Logo de Galería" class="navbar-logo">
+        <span class="ms-2"><strong>Gallery</strong></span>
+      </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html"><i class="fa-solid fa-house"></i> Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="especial.html"><i class="fa-solid fa-star"></i> Especial</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="extra.html"><i class="fa-solid fa-images"></i> Extra</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="todopokie.html"><i class="fa-solid fa-images"></i> Todopokie</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="todopokie2.html"><i class="fa-solid fa-images"></i> Todopokie Gallery</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dist/index.html"><i class="fa-solid fa-images"></i> Carousel</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="video.html"><i class="fa-solid fa-images"></i> Videos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="hannahowo.html"><i class="fa-solid fa-images"></i> Hannahowo</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="hannahowo2.html"><i class="fa-solid fa-images"></i> Hannahowo Gallery</a>
+          </li>
+        </ul>
+        <button id="download-all" class="btn btn-outline-success ms-auto">Download</button>
+      </div>
+    </nav>
+  </div>
+
+  <div class="container mt-5 pt-5">
+    <div id="gallery"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script>
+    const totalImages = 1782; // Total de imágenes
+    const gallery = document.getElementById("gallery");
+    const downloadButton = document.getElementById("download-all");
+    const imageFolder = "export/"; // Carpeta donde están las imágenes
+
+    // Generar galería de imágenes
+    for (let i = totalImages; i >= 0; i--) {
+      const link = document.createElement("a");
+      link.href = `${imageFolder}hannahowo${i}.jpg`;
+      link.target = "_blank";
+
+      const img = document.createElement("img");
+      img.src = `${imageFolder}hannahowo${i}.jpg`;
+      img.alt = `Imagen ${i}`;
+      img.loading = "lazy";
+
+      link.appendChild(img);
+      gallery.appendChild(link);
+    }
+
+    // Descargar todas las imágenes como archivo ZIP
+    downloadButton.addEventListener("click", async () => {
+      const zip = new JSZip();
+      const folder = zip.folder("imagenes");
+      const promises = [];
+
+      for (let i = 1; i <= totalImages; i++) {
+        const imageUrl = `${imageFolder}hannahowo${i}.jpg`;
+        const promise = fetch(imageUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Error al cargar la imagen: ${imageUrl}`);
+            }
+            return response.blob();
+          })
+          .then((blob) => {
+            const filename = `hannahowo${i}.jpg`;
+            folder.file(filename, blob);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+        promises.push(promise);
+      }
+
+      // Esperar a que todas las imágenes se descarguen
+      await Promise.all(promises);
+
+      // Generar el archivo ZIP y descargarlo
+      zip.generateAsync({ type: "blob" }).then((content) => {
+        saveAs(content, "imagenes.zip");
+      });
+    });
+  </script>
+</body>
+</html>
